@@ -9,7 +9,6 @@
     "client": "cd client && npm run dev",
     "dev:full": "concurrently \"npm run dev\" \"npm run client\""
   },
-git config user.email your@email.example
   "dependencies": {
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
