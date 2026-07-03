@@ -1,7 +1,6 @@
 client/node_modules
-client/dist
 docs
-node_modules/.cache
+node_modules
 .git
 .gitignore
 README.md
