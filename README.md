@@ -94,30 +94,47 @@ The Express server will serve the static React build from `client/dist/` and han
 
 ### Deploy to Vercel
 
-1. **Push to GitHub**
-   ```bash
-   git remote add origin https://github.com/your-username/your-repo.git
-   git push -u origin main
-   ```
+#### Step 1: Push to GitHub
+```bash
+git remote add origin https://github.com/your-username/your-repo.git
+git push -u origin main
+```
 
-2. **Connect to Vercel**
-   - Go to [vercel.com](https://vercel.com) and sign in with GitHub
-   - Click "Add New" → "Project"
-   - Select your repository
-   - Vercel will auto-detect the build command (`npm run build`)
+#### Step 2: Create Vercel Project
+1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+2. Click "Add New" → "Project"
+3. Select your repository
+4. Vercel will auto-detect the build command from `vercel.json`
 
-3. **Set environment variables** (if needed)
-   - In Vercel dashboard → Project Settings → Environment Variables
-   - Add `NODE_ENV=production` if not already set
+#### Step 3: Configure Environment (Optional)
+If you need a custom backend domain (not recommended — see Step 4):
+- In Vercel dashboard → Project Settings → Environment Variables
+- Add `CLIENT_ORIGIN=https://your-custom-domain.com` (only if backend is on a different domain)
 
-4. **Deploy**
-   - Vercel will automatically deploy on every push to `main`
-   - Your app will be live at `your-project.vercel.app`
+#### Step 4: Deploy
+- Push to `main` and Vercel will auto-deploy
+- Your app will be live at `your-project.vercel.app` within seconds
 
+#### How It Works
 The `vercel.json` configuration tells Vercel to:
-- Build the React client first with `npm run build`
-- Route `/api/*` and `/*` requests to the Express server
-- Serve the React static files from `client/dist/`
+1. Build the React client to `client/dist/` using `npm run build`
+2. Route `/api/*` requests to the Express server in `server.js`
+3. Route all other requests to `server.js` (for React Router SPA)
+4. Express serves the React build as static files + handles API endpoints
+
+**Important:** Both frontend and backend are deployed together as a single application on the same domain, so CORS is not an issue.
+
+#### Troubleshooting
+
+**"CORS: origin not allowed" error?**
+- Verify your Vercel deployment URL is `https://your-project.vercel.app`
+- If using a custom domain, set `CLIENT_ORIGIN=https://your-custom-domain.com` in Vercel environment variables
+- Check Vercel logs: `vercel logs` or view in Vercel dashboard
+
+**Build fails?**
+- Ensure `client/package.json` and root `package.json` are both valid
+- Run `npm run build` locally to test the build process
+- Check Vercel build logs for specific errors
 
 ---
 

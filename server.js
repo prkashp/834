@@ -17,20 +17,29 @@ const app  = express();
 const PORT = process.env.PORT || 4000;
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
-// Allow the React dev server and same-origin production deploys.
+// Allow the React dev server and production deploys.
 const ALLOWED_ORIGINS = [
   'http://localhost:5173', // Vite default
-  'http://localhost:3000', // CRA default (fallback)
-  process.env.CLIENT_ORIGIN,
+  'http://localhost:3000', // CRA default
+  'http://localhost:4000', // Same-origin (Express)
+  process.env.CLIENT_ORIGIN, // Custom domain via env var
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null, // Vercel auto-domain
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow requests with no origin (curl, Postman, same-origin)
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    // Allow requests with no origin (curl, Postman, same-origin requests)
+    if (!origin) return cb(null, true);
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+
+    // Log the rejected origin for debugging
+    console.warn(`[CORS] Rejecting origin: ${origin}`);
+    console.warn(`[CORS] Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
+
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
 }));
 
 // ── Body parsers ──────────────────────────────────────────────────────────────

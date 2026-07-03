@@ -4,15 +4,24 @@
   "env": {
     "NODE_ENV": "production"
   },
+  "functions": {
+    "server.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "server.js",
-      "methods": ["GET", "POST"]
+      "dest": "/server.js",
+      "methods": ["GET", "POST", "OPTIONS"]
     },
     {
-      "src": "/(.*)",
-      "dest": "server.js"
+      "src": "/(.*\\.(js|css|gif|ico|jpg|jpeg|jpg|png|svg|woff|woff2))",
+      "dest": "client/dist/$1"
+    },
+    {
+      "src": "/.*",
+      "dest": "/server.js"
     }
   ]
 }
