@@ -92,6 +92,33 @@ NODE_ENV=production npm start
 
 The Express server will serve the static React build from `client/dist/` and handle all API calls on port 4000.
 
+### Deploy to Vercel
+
+1. **Push to GitHub**
+   ```bash
+   git remote add origin https://github.com/your-username/your-repo.git
+   git push -u origin main
+   ```
+
+2. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com) and sign in with GitHub
+   - Click "Add New" → "Project"
+   - Select your repository
+   - Vercel will auto-detect the build command (`npm run build`)
+
+3. **Set environment variables** (if needed)
+   - In Vercel dashboard → Project Settings → Environment Variables
+   - Add `NODE_ENV=production` if not already set
+
+4. **Deploy**
+   - Vercel will automatically deploy on every push to `main`
+   - Your app will be live at `your-project.vercel.app`
+
+The `vercel.json` configuration tells Vercel to:
+- Build the React client first with `npm run build`
+- Route `/api/*` and `/*` requests to the Express server
+- Serve the React static files from `client/dist/`
+
 ---
 
 ## API reference
